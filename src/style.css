@@ -1,0 +1,74 @@
+.datepicker-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.datepicker-label {
+  font-size: 0.75rem;
+  margin-inline-start: 0.5rem;
+}
+
+.datepicker-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.datepicker-dialog {
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.datepicker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.datepicker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.datepicker-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.datepicker-day.today {
+  border-color: #0070f3;
+  color: #0070f3;
+}
+
+.datepicker-day.outside {
+  opacity: 0.4;
+}
+
+.datepicker-day.friday {
+  color: red;
+}
+
+.datepicker-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.datepicker-select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}

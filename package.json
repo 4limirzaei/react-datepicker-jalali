@@ -1,0 +1,65 @@
+{
+  "name": "react-datepicker-jalali",
+  "version": "0.0.1",
+  "description": "A React component for selecting dates in the Jalali calendar.",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "test",
+    "rollup": "rollup -c --bundleConfigAsCjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4limirzaei/react-datepicker-jalali.git"
+  },
+  "keywords": [
+    "date",
+    "datepicker",
+    "jalali datepicker",
+    "react datepicker",
+    "react jalali datepicker",
+    "jalali",
+    "shamsi",
+    "تقویم",
+    "تقویم جلالی",
+    "تقویم شمسی",
+    "تقویم فارسی"
+  ],
+  "author": "Ali Mirzaei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/4limirzaei/react-datepicker-jalali/issues"
+  },
+  "homepage": "https://github.com/4limirzaei/react-datepicker-jalali#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/react": "^18",
+    "react": "^19.1.0",
+    "rollup": "^4.39.0",
+    "rollup-plugin-dts": "^6.2.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.1.0",
+    "react-dom": "^18.0.0 || ^19.1.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "jalali-plugin-dayjs": "^1.1.4"
+  }
+}
