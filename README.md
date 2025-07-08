@@ -1,4 +1,4 @@
-# 🏦 React Date Picker Jalali
+# 📆 React Date Picker Jalali
 
 A React component for selecting dates in the **Jalali calendar**.
 

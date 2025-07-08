@@ -33,9 +33,7 @@ export default [
       }),
       terser(),
       postcss({
-        extract: true,
         minimize: true,
-        modules: false,
       }),
       json(),
     ],
@@ -45,6 +43,6 @@ export default [
     input: "src/index.tsx",
     output: [{ file: packageJson.types }],
     plugins: [dts.default()],
-    external: [/\.css/],
+    external: [/\.css$/],
   },
 ];

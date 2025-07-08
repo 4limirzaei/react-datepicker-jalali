@@ -31,10 +31,32 @@
   margin-bottom: 1rem;
 }
 
+.datepicker-header button {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
 .datepicker-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
+  text-align: center;
+}
+
+.datepicker-days-name {
+  margin-bottom: 1rem;
+}
+
+.datepicker-grid.datepicker-days div {
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  border-radius: 8px;
 }
 
 .datepicker-day {

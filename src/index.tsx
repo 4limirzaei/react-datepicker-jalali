@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import jalaliday from "jalali-plugin-dayjs";
-import "./style.css";
+import "./index.css";
 
 dayjs.extend(jalaliday);
 
 type PropsType = {
-  label: string;
+  label?: string;
   placeholder?: string;
-  name: string;
+  name?: string;
   onDateChange: (value: string) => void;
   inputClassName?: string;
   dialogClassName?: string;
@@ -123,7 +123,7 @@ export default function DatePicker({
   }, [showDatePicker]);
 
   return (
-    <div className="datepicker-wrapper">
+    <div className="datepicker-wrapper" dir="rtl">
       <label className="datepicker-label">{label}</label>
       <input
         type="text"
@@ -146,21 +146,23 @@ export default function DatePicker({
             <button onClick={handleNextMonth}>{renderLeftIcon || "›"}</button>
           </div>
 
-          <div className="datepicker-grid">
+          <div className="datepicker-grid datepicker-days-name">
             {dayNames.map((dayName, index) => (
               <div key={index}>{dayName}</div>
             ))}
           </div>
 
-          <div className="datepicker-grid">
+          <div className="datepicker-grid datepicker-days">
             {daysOfMonth.map((day, index) => {
               const isToday = dayjs().isSame(day, "day");
               const isOutOfMonth = !day.isSame(currentDate, "month");
+              const isFriday = day.day() === 5;
 
-              const defaultClass = [
-                isToday ? "border:1px solid blue" : "",
-                isOutOfMonth ? "opacity:0.4" : "",
-              ].join(" ");
+              const defaultStyle = {
+                border: isToday ? "1px solid blue" : "1px solid",
+                opacity: isOutOfMonth ? 0.4 : 1,
+                color: isFriday ? "red" : undefined,
+              };
 
               return (
                 <div
@@ -169,8 +171,9 @@ export default function DatePicker({
                     cursor: "pointer",
                     padding: "6px",
                     textAlign: "center",
+                    ...defaultStyle,
                   }}
-                  className={dayClassName?.(day) || defaultClass}
+                  className={dayClassName?.(day)}
                   onClick={() => handleSelectDate(day)}
                 >
                   {day.format("D")}
