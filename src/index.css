@@ -18,9 +18,17 @@
 }
 
 .datepicker-dialog {
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+}
+
+.datepicker-dialog-body {
   padding: 1rem;
   border: none;
   border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 

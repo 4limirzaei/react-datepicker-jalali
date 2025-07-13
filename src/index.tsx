@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import jalaliday from "jalali-plugin-dayjs";
 import "./index.css";
+import { useClickOutside } from "./options/click-outside";
 
 dayjs.extend(jalaliday);
 
@@ -19,8 +20,8 @@ type PropsType = {
 
 export default function DatePicker({
   label,
-  placeholder,
   name,
+  placeholder,
   onDateChange,
   inputClassName,
   dialogClassName,
@@ -37,6 +38,12 @@ export default function DatePicker({
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const datePickerModal = useRef<HTMLDialogElement>(null);
+
+  useClickOutside(datePickerModal, () => {
+    console.log("click outside");
+    setShowDatePicker(false);
+    console.log("datePickerModal", datePickerModal);
+  });
 
   const handlePrevMonth = () =>
     setCurrentDate(currentDate.subtract(1, "month"));
@@ -124,7 +131,8 @@ export default function DatePicker({
 
   return (
     <div className="datepicker-wrapper" dir="rtl">
-      <label className="datepicker-label">{label}</label>
+      {label && <label className="datepicker-label">{label}</label>}
+
       <input
         type="text"
         name={name}
@@ -135,11 +143,12 @@ export default function DatePicker({
         onClick={() => setShowDatePicker(true)}
         {...props}
       />
+
       <dialog
         ref={datePickerModal}
         className={dialogClassName || "datepicker-dialog"}
       >
-        <div>
+        <div className="datepicker-dialog-body">
           <div className="datepicker-header">
             <button onClick={handlePrevMonth}>{renderRightIcon || "‹"}</button>
             <span>{currentDate.locale("fa").format("MMMM YYYY")}</span>
