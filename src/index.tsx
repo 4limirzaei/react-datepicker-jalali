@@ -1,133 +1,63 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import jalaliday from "jalali-plugin-dayjs";
+import DatePickerMode from "./modes/DatePickerMode";
+import YearPickerMode from "./modes/YearPickerMode";
+import MonthPickerMode from "./modes/MonthPickerMode";
 import "./index.css";
-import { useClickOutside } from "./options/click-outside";
 
 dayjs.extend(jalaliday);
 
 type PropsType = {
   label?: string;
-  placeholder?: string;
   name?: string;
-  onDateChange: (value: string) => void;
+  placeholder?: string;
   inputClassName?: string;
   dialogClassName?: string;
-  dayClassName?: (day: Dayjs) => string;
+  dayClassName?: string;
   renderLeftIcon?: JSX.Element;
   renderRightIcon?: JSX.Element;
+  pickerType?: "dialog" | "popper";
+  pickerMode?: "datePicker" | "monthPicker" | "yearPicker";
+  onDateChange: (value: string | Number) => void;
 };
 
 export default function DatePicker({
   label,
   name,
   placeholder,
-  onDateChange,
   inputClassName,
   dialogClassName,
   dayClassName,
   renderLeftIcon,
   renderRightIcon,
+  pickerType = "dialog",
+  pickerMode = "datePicker",
+  onDateChange,
   ...props
 }: PropsType) {
-  const [currentDate, setCurrentDate] = useState(dayjs().calendar("jalali"));
-  const [currentYear, setCurrentYear] = useState(currentDate.get("year"));
-  const [currentMonth, setCurrentMonth] = useState(
-    currentDate.get("month") + 1
-  );
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const datePickerModal = useRef<HTMLDialogElement>(null);
-
-  useClickOutside(datePickerModal, () => {
-    console.log("click outside");
-    setShowDatePicker(false);
-    console.log("datePickerModal", datePickerModal);
-  });
-
-  const handlePrevMonth = () =>
-    setCurrentDate(currentDate.subtract(1, "month"));
-  const handleNextMonth = () => setCurrentDate(currentDate.add(1, "month"));
-
-  const handleChangeMonth = (value: string) => {
-    setCurrentDate(currentDate.set("month", +value - 1));
-  };
-
-  const handleChangeYear = (value: string) => {
-    setCurrentDate(currentDate.set("year", +value));
-  };
-
-  const generateYears = () => {
-    const years = [];
-    for (let i = currentYear - 50; i < currentYear + 50; i++) {
-      years.push(i);
-    }
-    return years;
-  };
-
-  const generateDaysOfMonth = () => {
-    const startOfMonth = currentDate.startOf("month");
-    const endOfMonth = currentDate.endOf("month");
-    const days: Dayjs[] = [];
-    let day = startOfMonth.clone();
-
-    const firstDayIndex = day.day();
-    const lastDayIndex = endOfMonth.day();
-
-    if (firstDayIndex < 6) {
-      for (let i = 0; i < firstDayIndex + 1; i++) {
-        days.push(startOfMonth.clone().subtract(firstDayIndex + 1 - i, "day"));
-      }
-    }
-
-    while (day.isBefore(endOfMonth) || day.isSame(endOfMonth)) {
-      days.push(day.clone());
-      day = day.add(1, "day");
-    }
-
-    for (let i = 0; i < (lastDayIndex === 6 ? 6 : 6 - lastDayIndex - 1); i++) {
-      days.push(endOfMonth.clone().add(i + 1, "day"));
-    }
-
-    return days;
-  };
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
 
   const handleSelectDate = (day: Dayjs) => {
     onDateChange(day.format("YYYY/MM/DD"));
+    setSelectedDate(day.format("YYYY/MM/DD"));
     setShowDatePicker(false);
   };
 
-  const daysOfMonth = generateDaysOfMonth();
-  const yearsList = generateYears();
+  const handleSelectMonth = (month: { title: string; value: Number }) => {
+    onDateChange(month.value);
+    setSelectedMonth(month.title);
+    setShowDatePicker(false);
+  };
 
-  const dayNames = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
-  const monthNames = [
-    { title: "فروردین", value: 1 },
-    { title: "اردیبهشت", value: 2 },
-    { title: "خرداد", value: 3 },
-    { title: "تیر", value: 4 },
-    { title: "مرداد", value: 5 },
-    { title: "شهریور", value: 6 },
-    { title: "مهر", value: 7 },
-    { title: "آبان", value: 8 },
-    { title: "آذر", value: 9 },
-    { title: "دی", value: 10 },
-    { title: "بهمن", value: 11 },
-    { title: "اسفند", value: 12 },
-  ];
-
-  useEffect(() => {
-    setCurrentMonth(currentDate.get("month") + 1);
-    setCurrentYear(currentDate.get("year"));
-  }, [currentDate]);
-
-  useEffect(() => {
-    if (showDatePicker) {
-      datePickerModal.current?.showModal();
-    } else {
-      datePickerModal.current?.close();
-    }
-  }, [showDatePicker]);
+  const handleSelectYear = (year: Number) => {
+    onDateChange(year);
+    setSelectedYear(String(year));
+    setShowDatePicker(false);
+  };
 
   return (
     <div className="datepicker-wrapper" dir="rtl">
@@ -138,86 +68,48 @@ export default function DatePicker({
         name={name}
         readOnly
         inputMode="none"
+        value={selectedDate || selectedMonth || selectedYear}
         placeholder={placeholder || label}
         className={inputClassName || "datepicker-input"}
         onClick={() => setShowDatePicker(true)}
         {...props}
       />
 
-      <dialog
-        ref={datePickerModal}
-        className={dialogClassName || "datepicker-dialog"}
-      >
-        <div className="datepicker-dialog-body">
-          <div className="datepicker-header">
-            <button onClick={handlePrevMonth}>{renderRightIcon || "‹"}</button>
-            <span>{currentDate.locale("fa").format("MMMM YYYY")}</span>
-            <button onClick={handleNextMonth}>{renderLeftIcon || "›"}</button>
-          </div>
+      {pickerMode === "datePicker" && (
+        <DatePickerMode
+          showDatePicker={showDatePicker}
+          renderLeftIcon={renderLeftIcon}
+          renderRightIcon={renderRightIcon}
+          dayClassName={dayClassName}
+          datePickerType={pickerType}
+          onSelectDate={(day: Dayjs) => handleSelectDate(day)}
+          onClose={() => setShowDatePicker(false)}
+        />
+      )}
 
-          <div className="datepicker-grid datepicker-days-name">
-            {dayNames.map((dayName, index) => (
-              <div key={index}>{dayName}</div>
-            ))}
-          </div>
+      {pickerMode === "monthPicker" && (
+        <MonthPickerMode
+          showDatePicker={showDatePicker}
+          monthClassName={dayClassName}
+          datePickerType={pickerType}
+          onSelectMonth={(month: { title: string; value: Number }) =>
+            handleSelectMonth(month)
+          }
+          onClose={() => setShowDatePicker(false)}
+        />
+      )}
 
-          <div className="datepicker-grid datepicker-days">
-            {daysOfMonth.map((day, index) => {
-              const isToday = dayjs().isSame(day, "day");
-              const isOutOfMonth = !day.isSame(currentDate, "month");
-              const isFriday = day.day() === 5;
-
-              const defaultStyle = {
-                border: isToday ? "1px solid blue" : "1px solid",
-                opacity: isOutOfMonth ? 0.4 : 1,
-                color: isFriday ? "red" : undefined,
-              };
-
-              return (
-                <div
-                  key={index}
-                  style={{
-                    cursor: "pointer",
-                    padding: "6px",
-                    textAlign: "center",
-                    ...defaultStyle,
-                  }}
-                  className={dayClassName?.(day)}
-                  onClick={() => handleSelectDate(day)}
-                >
-                  {day.format("D")}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="datepicker-controls">
-            <select
-              className="datepicker-select"
-              value={currentMonth}
-              onChange={(e) => handleChangeMonth(e.target.value)}
-            >
-              {monthNames.map((month) => (
-                <option key={month.value} value={month.value}>
-                  {month.title}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="datepicker-select"
-              value={currentYear}
-              onChange={(e) => handleChangeYear(e.target.value)}
-            >
-              {yearsList.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </dialog>
+      {pickerMode === "yearPicker" && (
+        <YearPickerMode
+          showDatePicker={showDatePicker}
+          renderLeftIcon={renderLeftIcon}
+          renderRightIcon={renderRightIcon}
+          monthClassName={dayClassName}
+          datePickerType={pickerType}
+          onSelectYear={(year: Number) => handleSelectYear(year)}
+          onClose={() => setShowDatePicker(false)}
+        />
+      )}
     </div>
   );
 }

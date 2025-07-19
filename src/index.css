@@ -57,6 +57,24 @@
   text-align: center;
 }
 
+.datepicker-grid-month {
+  width: 240px;
+  height: 240px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.datepicker-grid-year {
+  width: 240px;
+  height: 240px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
 .datepicker-days-name {
   margin-bottom: 1rem;
 }
@@ -73,6 +91,26 @@
   align-items: center;
   justify-content: center;
   border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.datepicker-month {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.datepicker-year {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: 1px solid;
   border-radius: 8px;
   cursor: pointer;
 }
