@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 type PropsType = {
   showDatePicker: boolean;
   dialogClassName?: string;
+  popperClassName?: string;
   monthClassName?: string;
   renderLeftIcon?: JSX.Element;
   renderRightIcon?: JSX.Element;
   datePickerType?: "dialog" | "popper";
+  triggerRef?: React.RefObject<HTMLElement>;
   onSelectYear: (value: Number) => void;
   onClose: () => void;
 };
@@ -17,10 +19,12 @@ type PropsType = {
 export default function YearPickerMode({
   showDatePicker,
   dialogClassName,
+  popperClassName,
   monthClassName,
   datePickerType,
   renderRightIcon,
   renderLeftIcon,
+  triggerRef,
   onSelectYear,
   onClose,
 }: PropsType) {
@@ -90,7 +94,12 @@ export default function YearPickerMode({
       )}
 
       {datePickerType === "popper" && (
-        <Popper>
+        <Popper
+          show={showDatePicker}
+          onClose={onClose}
+          popperClassName={popperClassName}
+          triggerRef={triggerRef}
+        >
           <YearPicker />
         </Popper>
       )}

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
 }
 
 .datepicker-label {
@@ -24,6 +25,9 @@
 }
 
 .datepicker-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
   padding: 1rem;
   border: none;
   border-radius: 12px;
@@ -36,7 +40,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .datepicker-header button {
@@ -73,10 +76,6 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   text-align: center;
-}
-
-.datepicker-days-name {
-  margin-bottom: 1rem;
 }
 
 .datepicker-grid.datepicker-days div {
@@ -132,11 +131,18 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
 .datepicker-select {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 8px;
+}
+
+.datepicker-popper {
+  width: fit-content;
+  position: absolute;
+  top: 115%;
+  right: 0;
+  z-index: 100;
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import jalaliday from "jalali-plugin-dayjs";
 import DatePickerMode from "./modes/DatePickerMode";
@@ -19,7 +19,9 @@ type PropsType = {
   renderRightIcon?: JSX.Element;
   pickerType?: "dialog" | "popper";
   pickerMode?: "datePicker" | "monthPicker" | "yearPicker";
-  onDateChange: (value: string | Number) => void;
+  selectsPosition?: "top" | "bottom";
+  value?: string;
+  onChange?: (value: string | Number) => void;
 };
 
 export default function DatePicker({
@@ -33,28 +35,32 @@ export default function DatePicker({
   renderRightIcon,
   pickerType = "dialog",
   pickerMode = "datePicker",
-  onDateChange,
+  selectsPosition = "bottom",
+  value,
+  onChange,
   ...props
 }: PropsType) {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedMonth, setSelectedMonth] = useState<string>("");
-  const [selectedYear, setSelectedYear] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>(value || "");
+  const [selectedMonth, setSelectedMonth] = useState<string>(value || "");
+  const [selectedYear, setSelectedYear] = useState<string>(value || "");
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectDate = (day: Dayjs) => {
-    onDateChange(day.format("YYYY/MM/DD"));
+    onChange?.(day.format("YYYY/MM/DD"));
     setSelectedDate(day.format("YYYY/MM/DD"));
     setShowDatePicker(false);
   };
 
   const handleSelectMonth = (month: { title: string; value: Number }) => {
-    onDateChange(month.value);
+    onChange?.(month.value);
     setSelectedMonth(month.title);
     setShowDatePicker(false);
   };
 
   const handleSelectYear = (year: Number) => {
-    onDateChange(year);
+    onChange?.(year);
     setSelectedYear(String(year));
     setShowDatePicker(false);
   };
@@ -68,6 +74,7 @@ export default function DatePicker({
         name={name}
         readOnly
         inputMode="none"
+        ref={inputRef}
         value={selectedDate || selectedMonth || selectedYear}
         placeholder={placeholder || label}
         className={inputClassName || "datepicker-input"}
@@ -82,6 +89,8 @@ export default function DatePicker({
           renderRightIcon={renderRightIcon}
           dayClassName={dayClassName}
           datePickerType={pickerType}
+          selectsPosition={selectsPosition}
+          triggerRef={inputRef}
           onSelectDate={(day: Dayjs) => handleSelectDate(day)}
           onClose={() => setShowDatePicker(false)}
         />

@@ -9,10 +9,13 @@ dayjs.extend(jalaliday);
 type PropsType = {
   showDatePicker: boolean;
   dialogClassName?: string;
+  popperClassName?: string;
   renderLeftIcon?: JSX.Element;
   renderRightIcon?: JSX.Element;
   dayClassName?: string;
   datePickerType?: "dialog" | "popper";
+  selectsPosition?: "top" | "bottom";
+  triggerRef?: React.RefObject<HTMLElement>;
   onSelectDate: (value: Dayjs) => void;
   onClose: () => void;
 };
@@ -20,10 +23,13 @@ type PropsType = {
 export default function DatePickerMode({
   showDatePicker,
   dialogClassName,
+  popperClassName,
   renderRightIcon,
   renderLeftIcon,
   dayClassName,
   datePickerType,
+  selectsPosition,
+  triggerRef,
   onSelectDate,
   onClose,
 }: PropsType) {
@@ -107,6 +113,36 @@ export default function DatePickerMode({
     { title: "اسفند", value: 12 },
   ];
 
+  const SelectControllers = () => {
+    return (
+      <div className="datepicker-controls">
+        <select
+          className="datepicker-select"
+          value={currentMonth}
+          onChange={(e) => handleChangeMonth(e.target.value)}
+        >
+          {monthNames.map((month) => (
+            <option key={month.value} value={month.value}>
+              {month.title}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="datepicker-select"
+          value={currentYear}
+          onChange={(e) => handleChangeYear(e.target.value)}
+        >
+          {yearsList.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  };
+
   useEffect(() => {
     setCurrentMonth(currentDate.get("month") + 1);
     setCurrentYear(currentDate.get("year"));
@@ -120,6 +156,8 @@ export default function DatePickerMode({
           <span>{currentDate.locale("fa").format("MMMM YYYY")}</span>
           <button onClick={handleNextMonth}>{renderLeftIcon || "›"}</button>
         </div>
+
+        {selectsPosition === "top" && <SelectControllers />}
 
         <div className="datepicker-grid datepicker-days-name">
           {dayNames.map((dayName, index) => (
@@ -157,31 +195,7 @@ export default function DatePickerMode({
           })}
         </div>
 
-        <div className="datepicker-controls">
-          <select
-            className="datepicker-select"
-            value={currentMonth}
-            onChange={(e) => handleChangeMonth(e.target.value)}
-          >
-            {monthNames.map((month) => (
-              <option key={month.value} value={month.value}>
-                {month.title}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="datepicker-select"
-            value={currentYear}
-            onChange={(e) => handleChangeYear(e.target.value)}
-          >
-            {yearsList.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
+        {selectsPosition === "bottom" && <SelectControllers />}
       </div>
     );
   };
@@ -199,7 +213,12 @@ export default function DatePickerMode({
       )}
 
       {datePickerType === "popper" && (
-        <Popper>
+        <Popper
+          show={showDatePicker}
+          onClose={onClose}
+          popperClassName={popperClassName}
+          triggerRef={triggerRef}
+        >
           <DatePicker />
         </Popper>
       )}

@@ -6,8 +6,10 @@ import Popper from "../components/Popper";
 type PropsType = {
   showDatePicker: boolean;
   dialogClassName?: string;
+  popperClassName?: string;
   monthClassName?: string;
   datePickerType?: "dialog" | "popper";
+  triggerRef?: React.RefObject<HTMLElement>;
   onSelectMonth: (value: { title: string; value: Number }) => void;
   onClose: () => void;
 };
@@ -17,8 +19,10 @@ dayjs.extend(jalaliday);
 export default function MonthPickerMode({
   showDatePicker,
   dialogClassName,
+  popperClassName,
   monthClassName,
   datePickerType,
+  triggerRef,
   onSelectMonth,
   onClose,
 }: PropsType) {
@@ -73,7 +77,12 @@ export default function MonthPickerMode({
       )}
 
       {datePickerType === "popper" && (
-        <Popper>
+        <Popper
+          show={showDatePicker}
+          popperClassName={popperClassName}
+          onClose={onClose}
+          triggerRef={triggerRef}
+        >
           <MonthPicker />
         </Popper>
       )}
